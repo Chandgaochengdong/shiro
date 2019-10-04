@@ -28,8 +28,8 @@ public class ShiroSampleDao {
         Set<String> permissions = new HashSet<>();
         switch (role) {
             case "admin":
-                permissions.add("document:read");
-                permissions.add("document:write");
+                permissions.add("sample:read");
+                permissions.add("sample:write");
                 break;
             case "guest":
                 permissions.add("read");

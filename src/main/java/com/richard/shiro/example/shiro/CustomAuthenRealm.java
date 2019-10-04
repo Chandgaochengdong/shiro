@@ -41,7 +41,7 @@ public class CustomAuthenRealm extends AuthorizingRealm {
 
 
     /**
-     * 认证  调用实现方法
+     * 登录认证  调用实现方法
      * @param authenticationToken
      * @return
      * @throws AuthenticationException
@@ -51,6 +51,10 @@ public class CustomAuthenRealm extends AuthorizingRealm {
         System.out.println("  AuthenticationInfo  ");
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
         String username = token.getUsername();
+        /**
+         *
+         * 在实际应用过程中，你需要再此处，做你的密码安全性校验，以及一些相关的业务处理
+         */
         String password = this.shiroSampleDao.getPasswordByUsername(username);
 
         return new SimpleAuthenticationInfo(username, password, getName());

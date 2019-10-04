@@ -1,6 +1,9 @@
 package com.richard.shiro.example.controller;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.LockedAccountException;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
@@ -23,13 +26,26 @@ public class SampleController {
         System.out.println("  username : " +  username);
         System.out.println("  password : " +  password);
         System.out.println(" request query :" + request.getQueryString());
-        System.out.println(" request : " + request.getPathInfo());
+       // System.out.println(" request : " + request.getPathInfo());
 
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         token.setRememberMe(true);
 
         Subject currentUser = SecurityUtils.getSubject();
-        currentUser.login(token);
+
+        try {
+            currentUser.login(token);
+        } catch (UnknownAccountException uae) {
+            System.out.println("登录 用户帐号或密码不正确");
+            return null;
+        } catch (LockedAccountException lae) {
+            System.out.println("登录 用户帐号已锁定不可用");
+            return null;
+
+        } catch (AuthenticationException ae) {
+            System.out.println("登录 认证失败");
+            return null;
+        }
 
         return "login sucess username ： " + username +  "   password : " + password;
 
@@ -45,14 +61,14 @@ public class SampleController {
 
 
     @GetMapping("/read")
-    @RequiresPermissions("document:read")
+    @RequiresPermissions("sample:read")
     public String read() {
         return " I am reading...";
     }
 
 
     @GetMapping("/write")
-    @RequiresPermissions("document:write")
+    @RequiresPermissions("sample:write")
     public String write() {
         return " I am writing...";
     }
